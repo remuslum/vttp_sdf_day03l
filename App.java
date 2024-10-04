@@ -11,6 +11,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
+
+import people.Person;
+import service.CSVManagement;
 
 public class App {
     public static void main(String[] args) throws IOException {
@@ -24,7 +28,7 @@ public class App {
         String fileName = args[1];
         String dirPathFileName = dirPath + File.separator + fileName;
 
-        //check if a directory exists
+        // check if a directory exists
         // If it does not exist, create the dictionary
         File directory = new File(dirPath);
 
@@ -48,15 +52,15 @@ public class App {
         // 1. Use console to read in a string of text (sentence)
         // 2. Use FileWriter to write the content to the file
 
-        Console console = System.console(); 
-        String keyBoardInput = console.readLine("Enter/Input a sentence: ");
+        // Console console = System.console(); 
+        // String keyBoardInput = console.readLine("Enter/Input a sentence: ");
 
         // FileWriter fw = new FileWriter(file, true);
         // fw.write(keyBoardInput);
         // fw.flush();
         // fw.close();
 
-        // // Use FileReader to read the file
+        // Use FileReader to read the file
         // FileReader fr = new FileReader(file);
         // int dataRead = fr.read();
         // while (dataRead != -1) {
@@ -66,24 +70,24 @@ public class App {
         // fr.close();
 
         // Example 2: BufferedWriter to write file
-        FileWriter fw = new FileWriter(file, true);
-        BufferedWriter bw = new BufferedWriter(fw);
-        bw.append(keyBoardInput);
-        bw.flush();
-        bw.close();
-        fw.close();
+        // FileWriter fw = new FileWriter(file, true);
+        // BufferedWriter bw = new BufferedWriter(fw);
+        // bw.append(keyBoardInput);
+        // bw.flush();
+        // bw.close();
+        // fw.close();
 
         // Use BufferedReader to read the file content
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
-        String line = br.readLine();
-        while (line != null) {
-            System.out.println(line);
-            line = br.readLine();
-        }
+        // FileReader fr = new FileReader(file);
+        // BufferedReader br = new BufferedReader(fr);
+        // String line = br.readLine();
+        // while (line != null) {
+        //     System.out.println(line);
+        //     line = br.readLine();
+        // }
         
-        br.close();
-        fr.close();
+        // br.close();
+        // fr.close();
 
         // Using try block
         // try (FileReader fr = new FileReader(file)) {
@@ -104,7 +108,7 @@ public class App {
         // fos.flush();
         // fos.close();
 
-        // //Use FileInputStream to read the content
+        //Use FileInputStream to read the content
         // FileInputStream fis = new FileInputStream(file);
         // int contentRead = fis.read();
         // while (contentRead != -1) {
@@ -123,7 +127,7 @@ public class App {
         // dos.close();
 
 
-        // // Use FileInputStream and DataInputStream to read the content
+        // Use FileInputStream and DataInputStream to read the content
         // FileInputStream fis = new FileInputStream(file);
         // DataInputStream dis = new DataInputStream(fis);
         // int disContent = 0;
@@ -131,5 +135,37 @@ public class App {
         //     System.out.print((char) disContent);
         // }
         // dis.close();
+
+        CSVManagement manager = new CSVManagement();
+        List<Person> people = manager.readCSV(dirPathFileName);
+
+        Console consoleSelection = System.console();
+        int selection = 0;
+        while (selection != 3) {
+            System.out.println("1. Enter new Person details");
+            System.out.println("2. Save to new csv file");
+            System.out.println("3. Quit Program");
+            selection = Integer.parseInt(consoleSelection.readLine(">>>"));
+
+            switch (selection) {
+                case 1:
+                    Console console1 = System.console();
+                    String personName = console1.readLine("Enter Person name: ");
+                    String personRegion = console1.readLine("Enter Area: ");
+                    String personYear = console1.readLine("Enter Year of Birth");
+    
+                    Person p = new Person(personName, personRegion, Integer.parseInt(personYear));
+                    people.add(p);
+                    break;
+                case 2:
+                    Console console2 = System.console();
+                    String newFileName = console2.readLine("Enter a new name for your csv file: ");
+                    manager.writeCSV(dirPath + File.separator + newFileName, people);
+                    break;
+                case 3:
+                    break;
+            }
+        }
+
     }
 }
